@@ -75,5 +75,4 @@ async def root():
 
     print(response.text)
 
-    # encode to utf-8
-    return str_trim.encode('utf-8')
+    return str(error_hos).encode('utf-8')
