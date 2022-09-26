@@ -1,9 +1,6 @@
 import requests
 
-url = ""
-
-payload = {}
-headers = {}
+url = "https://linenoti.cmhis.org"
 
 # call the api but not wait for the response
 try:
