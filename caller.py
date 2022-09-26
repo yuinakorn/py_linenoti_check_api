@@ -1,6 +1,6 @@
 import requests
 
-url = "https://linenoti.cmhis.org"
+url = ""
 
 # call the api but not wait for the response
 try:
