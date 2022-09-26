@@ -1,5 +1,5 @@
 #!/usr/bin/env python3.10
-# check your version python such as python3.10
+# In the first line check your version python such as python3.10
 import requests
 
 url = ""
