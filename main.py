@@ -2,9 +2,9 @@ from fastapi import FastAPI
 import requests
 import os
 from dotenv import dotenv_values
-import datetime
+from datetime import datetime, timezone, timedelta
 
-LOCAL_TIMEZONE = datetime.datetime.now(datetime.timezone.utc).astimezone().tzinfo
+# LOCAL_TIMEZONE = datetime.datetime.now(datetime.timezone.utc).astimezone().tzinfo
 
 config_env = {
     **dotenv_values(".env"),
@@ -62,7 +62,9 @@ async def root():
     str_trim = str("\n" + " " + str_trim)
 
     # now = datetime.now().strftime("%d/%m/%Y %H:%M")
-    now = datetime.datetime.now(LOCAL_TIMEZONE).strftime("%d/%m/%Y %H:%M")
+    # now = datetime.datetime.now(LOCAL_TIMEZONE).strftime("%d/%m/%Y %H:%M")
+    tz = timezone(timedelta(hours=7))
+    now = datetime.now(tz=tz).strftime("%d/%m/%Y %H:%M")
     str_trim = str("\n" + " Report at " + now + str_trim)
 
     url = config_env['LINE_NOTIFY']
