@@ -4,7 +4,6 @@ import os
 from dotenv import dotenv_values
 from datetime import datetime, timezone, timedelta
 
-# LOCAL_TIMEZONE = datetime.datetime.now(datetime.timezone.utc).astimezone().tzinfo
 
 config_env = {
     **dotenv_values(".env"),
@@ -61,7 +60,7 @@ async def noline():
     return str(error_hos).encode('utf-8')
 
 
-@app.get("/")
+@app.post("/")
 async def root():
     global error_hos, jdata
     url = config_env['URL1']
@@ -76,6 +75,8 @@ async def root():
     i = 0
     e = 0
     for data in json_data:
+        if str(data['hcode'])[0] == '0':
+            continue
         urls = f"{config_env['URL2']}{data['hcode']}"
         headers = {
             'Content-Type': 'application/x-www-form-urlencoded'
