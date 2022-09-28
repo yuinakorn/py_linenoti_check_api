@@ -12,7 +12,7 @@ config_env = {
 app = FastAPI()
 
 
-@app.get("/noline/t/{token}")
+@app.get("pi/noline/t/{token}")
 async def noline(token: str = None):
     if token == config_env['TOKEN']:
         global error_hos, jdata
@@ -63,7 +63,7 @@ async def noline(token: str = None):
         raise HTTPException(status_code=404, detail="Token Invalid")
 
 
-@app.post("/")
+@app.post("/pi")
 async def root(keys: str = Form()):
     if keys == config_env['API_KEY']:
         global error_hos, jdata
