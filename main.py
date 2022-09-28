@@ -12,7 +12,7 @@ config_env = {
 app = FastAPI()
 
 
-@app.get("pi/noline/t/{token}")
+@app.get("/pi/noline/t/{token}")
 async def noline(token: str = None):
     if token == config_env['TOKEN']:
         global error_hos, jdata
