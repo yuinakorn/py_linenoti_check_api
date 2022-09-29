@@ -30,30 +30,30 @@ async def noline(token: str = None):
         for data in json_data:
             if str(data['hcode'])[0] == '0':
                 continue
-                urls = f"{config_env['URL2']}{data['hcode']}"
-                headers = {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-                payload = {}
-                try:
-                    response = requests.request("GET", urls, headers=headers, data=payload)
-                    json_data = response.json()
+            urls = f"{config_env['URL2']}{data['hcode']}"
+            headers = {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+            payload = {}
+            try:
+                response = requests.request("GET", urls, headers=headers, data=payload)
+                json_data = response.json()
 
-                    # because of the source is different type of data
-                    if type(json_data) == dict:
-                        jdata = json_data['status']
-                    elif type(json_data) == list:
-                        jdata = json_data[0]['status']
+                # because of the source is different type of data
+                if type(json_data) == dict:
+                    jdata = json_data['status']
+                elif type(json_data) == list:
+                    jdata = json_data[0]['status']
 
-                    print(data['hcode'], " ", data['hname'], jdata)
+                print(data['hcode'], " ", data['hname'], jdata)
 
-                    if jdata != 'OK':
-                        error_hos.append(f"{data['hcode']} {data['hname']} {jdata}")
-                        e += 1
+                if jdata != 'OK':
+                    error_hos.append(f"{data['hcode']} {data['hname']} {jdata}")
+                    e += 1
 
-                except Exception as err:
-                    print(err)
-                    pass
+            except Exception as err:
+                print(err)
+                pass
 
             i += 1
 
