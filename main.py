@@ -66,10 +66,12 @@ async def noline(token: str = None):
 
 
 @app.post("/pi")
-async def root(keys: str = Form()):
+async def root(keys: str = Form(), holiday: str = None):
     if keys == config_env['API_KEY']:
         global error_hos, jdata
         url = config_env['URL1']
+
+        print(holiday)
 
         headers = {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -129,12 +131,17 @@ async def root(keys: str = Form()):
             'Content-Type': 'application/x-www-form-urlencoded'
         }
 
-        # call LINE Notify API
-        requests.request("POST", url, headers=headers, data=payload)
+        if holiday == 'holiday':
+            if e > 0:
+                requests.request("POST", url, headers=headers, data=payload)
+                return str(error_hos).encode('utf-8')
 
-        # print(response.text)
+        else:
+            # call LINE Notify API
+            requests.request("POST", url, headers=headers, data=payload)
 
-        return str(error_hos).encode('utf-8')
+            # print(response.text)
+            return str(error_hos).encode('utf-8')
 
     else:
         return "Wrong API key"
