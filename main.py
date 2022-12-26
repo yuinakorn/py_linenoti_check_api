@@ -28,8 +28,9 @@ async def noline(token: str = None):
         i = 0
         e = 0
         for data in json_data:
-            if str(data['hcode'])[0] == '0':
+            if data['hcode'] == '' or str(data['hcode'])[0] == '0':
                 continue
+
             urls = f"{config_env['URL2']}{data['hcode']}"
             headers = {
                 'Content-Type': 'application/x-www-form-urlencoded'
@@ -83,8 +84,9 @@ async def root(keys: str = Form(), holiday: str = None):
         i = 0
         e = 0
         for data in json_data:
-            if str(data['hcode'])[0] == '0':
+            if data['hcode'] == '' or str(data['hcode'])[0] == '0':
                 continue
+
             urls = f"{config_env['URL2']}{data['hcode']}"
             headers = {
                 'Content-Type': 'application/x-www-form-urlencoded'
