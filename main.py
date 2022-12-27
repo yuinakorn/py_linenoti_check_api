@@ -3,6 +3,15 @@ import requests
 import os
 from dotenv import dotenv_values
 from datetime import datetime, timezone, timedelta
+import pymysql
+
+connection = pymysql.connect(host='172.17.5.12',  # private ip (VPN)
+                             user='ihims',
+                             password='Admin_ssj#2022',
+                             db='api',
+                             charset='utf8mb4',
+                             port=6034
+                             )
 
 config_env = {
     **dotenv_values(".env"),
@@ -13,7 +22,7 @@ app = FastAPI()
 
 
 @app.get("/pi/noline/t/{token}")
-async def noline(token: str = None):
+async def check_manual(token: str = None):
     if token == config_env['TOKEN']:
         global error_hos, jdata
         url = config_env['URL1']
@@ -52,6 +61,15 @@ async def noline(token: str = None):
                     error_hos.append(f"{data['hcode']} {data['hname']} {jdata}")
                     e += 1
 
+                hcode = "'" + data['hcode'] + "'"
+                status = "'" + jdata + "'"
+                check_time = "'" + datetime.now(timezone(timedelta(hours=7))).strftime("%Y-%m-%d %H:%M:%S") + "'"
+                sql = "INSERT INTO client_status_log (hoscode, status, checktime) VALUES (%s, %s, %s)" % \
+                             (hcode, status, check_time)
+                with connection.cursor() as cursor:
+                    cursor.execute(sql)
+                    connection.commit()
+
             except Exception as err:
                 print(err)
                 pass
@@ -67,12 +85,10 @@ async def noline(token: str = None):
 
 
 @app.post("/pi")
-async def root(keys: str = Form(), holiday: str = None):
+async def send_line(keys: str = Form()):
     if keys == config_env['API_KEY']:
         global error_hos, jdata
         url = config_env['URL1']
-
-        print(holiday)
 
         headers = {
             'Content-Type': 'application/x-www-form-urlencoded'
@@ -108,6 +124,17 @@ async def root(keys: str = Form(), holiday: str = None):
                     error_hos.append(f"{data['hcode']} {data['hname']} {jdata}")
                     e += 1
 
+                # insert result to database
+                hcode = "'" + data['hcode'] + "'"
+                status = "'" + jdata + "'"
+                check_time = "'" + datetime.now(timezone(timedelta(hours=7))).strftime("%Y-%m-%d %H:%M:%S") + "'"
+                sql = "INSERT INTO client_status_log (hoscode, status, checktime) VALUES (%s, %s, %s)" % \
+                      (hcode, status, check_time)
+                with connection.cursor() as cursor:
+                    cursor.execute(sql)
+                    connection.commit()
+               # end insert
+
             except Exception as err:
                 print(err)
                 pass
@@ -133,17 +160,11 @@ async def root(keys: str = Form(), holiday: str = None):
             'Content-Type': 'application/x-www-form-urlencoded'
         }
 
-        if holiday == 'holiday':
-            if e > 0:
-                requests.request("POST", url, headers=headers, data=payload)
-                return str(error_hos).encode('utf-8')
+        # call LINE Notify API
+        requests.request("POST", url, headers=headers, data=payload)
 
-        else:
-            # call LINE Notify API
-            requests.request("POST", url, headers=headers, data=payload)
-
-            # print(response.text)
-            return str(error_hos).encode('utf-8')
+        # print(response.text)
+        return str(error_hos).encode('utf-8')
 
     else:
         return "Wrong API key"
