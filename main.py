@@ -5,20 +5,21 @@ from dotenv import dotenv_values
 from datetime import datetime, timezone, timedelta
 import pymysql
 
-connection = pymysql.connect(host='172.17.5.12',  # private ip (VPN)
-                             user='ihims',
-                             password='Admin_ssj#2022',
-                             db='api',
-                             charset='utf8mb4',
-                             port=6034
-                             )
-
 config_env = {
     **dotenv_values(".env"),
     **os.environ,
 }
 
 app = FastAPI()
+
+
+connection = pymysql.connect(host=config_env['HOST_DB'],  # private ip (VPN)
+                             user=config_env['USER_DB'],
+                             password=config_env['PASSWORD_DB'],
+                             db=config_env['DB_NAME'],
+                             charset='utf8mb4',
+                             port=int(config_env["DB_PORT"]),
+                             )
 
 
 @app.get("/pi/noline/t/{token}")
@@ -61,14 +62,15 @@ async def check_manual(token: str = None):
                     error_hos.append(f"{data['hcode']} {data['hname']} {jdata}")
                     e += 1
 
-                hcode = "'" + data['hcode'] + "'"
-                status = "'" + jdata + "'"
-                check_time = "'" + datetime.now(timezone(timedelta(hours=7))).strftime("%Y-%m-%d %H:%M:%S") + "'"
-                sql = "INSERT INTO client_status_log (hoscode, status, checktime) VALUES (%s, %s, %s)" % \
-                             (hcode, status, check_time)
-                with connection.cursor() as cursor:
-                    cursor.execute(sql)
-                    connection.commit()
+                # Test don't insert to database
+                # hcode = "'" + data['hcode'] + "'"
+                # status = "'" + jdata + "'"
+                # check_time = "'" + datetime.now(timezone(timedelta(hours=7))).strftime("%Y-%m-%d %H:%M:%S") + "'"
+                # sql = "INSERT INTO client_status_log (hoscode, status, checktime) VALUES (%s, %s, %s)" % \
+                #              (hcode, status, check_time)
+                # with connection.cursor() as cursor:
+                #     cursor.execute(sql)
+                #     connection.commit()
 
             except Exception as err:
                 print(err)
@@ -161,7 +163,7 @@ async def send_line(keys: str = Form()):
         }
 
         # call LINE Notify API
-        requests.request("POST", url, headers=headers, data=payload)
+        # requests.request("POST", url, headers=headers, data=payload)
 
         # print(response.text)
         return str(error_hos).encode('utf-8')
