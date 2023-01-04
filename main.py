@@ -88,6 +88,7 @@ async def check_manual(token: str = None):
 
 @app.post("/pi")
 async def send_line(keys: str = Form()):
+
     if keys == config_env['API_KEY']:
         global error_hos, jdata
         url = config_env['URL1']
@@ -163,7 +164,7 @@ async def send_line(keys: str = Form()):
         }
 
         # call LINE Notify API
-        # requests.request("POST", url, headers=headers, data=payload)
+        requests.request("POST", url, headers=headers, data=payload)
 
         # print(response.text)
         return str(error_hos).encode('utf-8')
