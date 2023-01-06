@@ -63,14 +63,14 @@ async def check_manual(token: str = None):
                     e += 1
 
                 # Test don't insert to database
-                # hcode = "'" + data['hcode'] + "'"
-                # status = "'" + jdata + "'"
-                # check_time = "'" + datetime.now(timezone(timedelta(hours=7))).strftime("%Y-%m-%d %H:%M:%S") + "'"
-                # sql = "INSERT INTO client_status_log (hoscode, status, checktime) VALUES (%s, %s, %s)" % \
-                #              (hcode, status, check_time)
-                # with connection.cursor() as cursor:
-                #     cursor.execute(sql)
-                #     connection.commit()
+                hcode = "'" + data['hcode'] + "'"
+                status = "'" + jdata + "'"
+                check_time = "'" + datetime.now(timezone(timedelta(hours=7))).strftime("%Y-%m-%d %H:%M:%S") + "'"
+                sql = "INSERT INTO client_status_log (hoscode, status, checktime) VALUES (%s, %s, %s)" % \
+                             (hcode, status, check_time)
+                with connection.cursor() as cursor:
+                    cursor.execute(sql)
+                    connection.commit()
 
             except Exception as err:
                 print(err)
@@ -149,25 +149,22 @@ async def send_line(keys: str = Form()):
         str_trim = str(error_hos).replace('[', '').replace(']', '').replace("'", '').replace(",", '\n')
         str_trim = str("\n" + " " + str_trim)
 
-        # now = datetime.now().strftime("%d/%m/%Y %H:%M")
-        # now = datetime.datetime.now(LOCAL_TIMEZONE).strftime("%d/%m/%Y %H:%M")
         tz = timezone(timedelta(hours=7))
         now = datetime.now(tz=tz).strftime("%d/%m/%Y %H:%M")
         str_trim = str("\n" + " Report at " + now + str_trim)
 
-        url = config_env['LINE_NOTIFY']
-
-        payload = {"message": str(str_trim)}
-        headers = {
-            'Authorization': 'Bearer ' + config_env['LINE_TOKEN'],
-            'Content-Type': 'application/x-www-form-urlencoded'
-        }
+        # url = config_env['LINE_NOTIFY']
+        #
+        # payload = {"message": str(str_trim)}
+        # headers = {
+        #     'Authorization': 'Bearer ' + config_env['LINE_TOKEN'],
+        #     'Content-Type': 'application/x-www-form-urlencoded'
+        # }
 
         # call LINE Notify API
-        requests.request("POST", url, headers=headers, data=payload)
+        # requests.request("POST", url, headers=headers, data=payload)
 
-        # print(response.text)
-        return str(error_hos).encode('utf-8')
+        # return str(error_hos).encode('utf-8')
 
     else:
         return "Wrong API key"
