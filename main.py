@@ -162,7 +162,7 @@ async def send_line(keys: str = Form()):
 
         # call LINE Notify API
         # requests.request("POST", url, headers=headers, data=payload)
-
+        print(now)
         return str(error_hos).encode('utf-8')
 
     else:
