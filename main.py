@@ -12,8 +12,7 @@ config_env = {
 
 app = FastAPI()
 
-
-connection = pymysql.connect(host=config_env['HOST_DB'],  # private ip (VPN)
+connection = pymysql.connect(host=config_env['HOST_DB'],
                              user=config_env['USER_DB'],
                              password=config_env['PASSWORD_DB'],
                              db=config_env['DB_NAME'],
@@ -67,7 +66,7 @@ async def check_manual(token: str = None):
                 status = "'" + jdata + "'"
                 check_time = "'" + datetime.now(timezone(timedelta(hours=7))).strftime("%Y-%m-%d %H:%M:%S") + "'"
                 sql = "INSERT INTO client_status_log (hoscode, status, checktime) VALUES (%s, %s, %s)" % \
-                             (hcode, status, check_time)
+                      (hcode, status, check_time)
                 with connection.cursor() as cursor:
                     cursor.execute(sql)
                     connection.commit()
@@ -88,7 +87,6 @@ async def check_manual(token: str = None):
 
 @app.post("/pi")
 async def send_line(keys: str = Form()):
-
     if keys == config_env['API_KEY']:
         global error_hos, jdata
         url = config_env['URL1']
@@ -136,7 +134,8 @@ async def send_line(keys: str = Form()):
                 with connection.cursor() as cursor:
                     cursor.execute(sql)
                     connection.commit()
-               # end insert
+
+            # end insert
 
             except Exception as err:
                 print(err)
@@ -164,7 +163,7 @@ async def send_line(keys: str = Form()):
         # call LINE Notify API
         # requests.request("POST", url, headers=headers, data=payload)
 
-        # return str(error_hos).encode('utf-8')
+        return str(error_hos).encode('utf-8')
 
     else:
         return "Wrong API key"
