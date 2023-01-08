@@ -78,7 +78,8 @@ async def check_manual(token: str = None):
             i += 1
 
         error_hos.append(f"Total {i} hospital {e} error")
-
+        cursor.close()
+        connection.close()
         return str(error_hos).encode('utf-8')
 
     else:
@@ -162,7 +163,9 @@ async def send_line(keys: str = Form()):
 
         # call LINE Notify API
         # requests.request("POST", url, headers=headers, data=payload)
-        print(now)
+        print(str_trim)
+        cursor.close()
+        connection.close()
         return str(error_hos).encode('utf-8')
 
     else:
