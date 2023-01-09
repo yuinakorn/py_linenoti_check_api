@@ -12,18 +12,19 @@ config_env = {
 
 app = FastAPI()
 
-connection = pymysql.connect(host=config_env['HOST_DB'],
-                             user=config_env['USER_DB'],
-                             password=config_env['PASSWORD_DB'],
-                             db=config_env['DB_NAME'],
-                             charset='utf8mb4',
-                             port=int(config_env["DB_PORT"]),
-                             )
-
 
 @app.get("/pi/noline/t/{token}")
 async def check_manual(token: str = None):
     if token == config_env['TOKEN']:
+
+        connection = pymysql.connect(host=config_env['HOST_DB'],
+                                     user=config_env['USER_DB'],
+                                     password=config_env['PASSWORD_DB'],
+                                     db=config_env['DB_NAME'],
+                                     charset='utf8mb4',
+                                     port=int(config_env["DB_PORT"]),
+                                     )
+
         global error_hos, jdata
         url = config_env['URL1']
 
@@ -89,6 +90,15 @@ async def check_manual(token: str = None):
 @app.post("/pi")
 async def send_line(keys: str = Form()):
     if keys == config_env['API_KEY']:
+
+        connection = pymysql.connect(host=config_env['HOST_DB'],
+                                     user=config_env['USER_DB'],
+                                     password=config_env['PASSWORD_DB'],
+                                     db=config_env['DB_NAME'],
+                                     charset='utf8mb4',
+                                     port=int(config_env["DB_PORT"]),
+                                     )
+
         global error_hos, jdata
         url = config_env['URL1']
 
