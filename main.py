@@ -81,7 +81,7 @@ async def check_manual(token: str = None):
         error_hos.append(f"Total {i} hospital {e} error")
         cursor.close()
         connection.close()
-        return str(error_hos).encode('utf-8')
+        return {"message": "Success", "detail": error_hos}
 
     else:
         raise HTTPException(status_code=404, detail="Token Invalid")
@@ -176,7 +176,8 @@ async def send_line(keys: str = Form()):
         print(str_trim)
         cursor.close()
         connection.close()
-        return str(error_hos).encode('utf-8')
+        str(error_hos).encode('utf-8')
+        return {"message": "Success","detail": error_hos}
 
     else:
         return "Wrong API key"
