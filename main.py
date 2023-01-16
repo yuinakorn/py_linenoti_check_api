@@ -112,7 +112,7 @@ async def send_line(keys: str = Form()):
         i = 0
         e = 0
         for data in json_data:
-            if data['hcode'] == '' or str(data['hcode'])[0] == '0':
+            if (data['hcode'] == '' or str(data['hcode'])[0] == '0') and data['hcode'] != '06009': # 06009 คือ รพ.แม่ตื่น
                 continue
 
             urls = f"{config_env['URL2']}{data['hcode']}"
