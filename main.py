@@ -112,7 +112,8 @@ async def send_line(keys: str = Form()):
         i = 0
         e = 0
         for data in json_data:
-            if (data['hcode'] == '' or str(data['hcode'])[0] == '0') and data['hcode'] != '06009': # 06009 คือ รพ.แม่ตื่น
+            if (data['hcode'] == '' or str(data['hcode'])[0] == '0') and data[
+                'hcode'] != '06009':  # 06009 คือ รพ.แม่ตื่น
                 continue
 
             urls = f"{config_env['URL2']}{data['hcode']}"
@@ -174,10 +175,11 @@ async def send_line(keys: str = Form()):
         # call LINE Notify API
         # requests.request("POST", url, headers=headers, data=payload)
         print(str_trim)
+        print(datetime.now(timezone(timedelta(hours=7))).strftime("%Y-%m-%d %H:%M:%S"))
         cursor.close()
         connection.close()
         str(error_hos).encode('utf-8')
-        return {"message": "Success","detail": error_hos}
+        return {"message": "Success", "detail": error_hos}
 
     else:
         return "Wrong API key"
