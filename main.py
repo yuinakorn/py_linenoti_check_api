@@ -52,7 +52,13 @@ async def check_manual(token: str = None):
 
                 # because of the source is different type of data
                 if type(json_data) == dict:
-                    jdata = json_data['status']
+                    if json_data['status']:
+                        jdata = json_data['status']
+                    elif json_data['STATUS']:
+                        jdata = json_data['STATUS']
+                    else:
+                        jdata = json_data['status']
+
                 elif type(json_data) == list:
                     jdata = json_data[0]['status']
 
